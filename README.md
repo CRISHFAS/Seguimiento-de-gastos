@@ -42,6 +42,11 @@ La conectividad de la base de datos se realiza con la ayuda de models.py.
 
 Cree los siguientes modelos en models.py archivo en la aplicación de su proyecto.
 
+# Código de Ejemplo
+
+Aquí está un fragmento de código Python que define algunos modelos de Django:
+
+```python
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -49,42 +54,51 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Sum
-#Create your models here.
+
+# Create your models here.
+
 SELECT_CATEGORY_CHOICES = [
-    ("Food","Food"),
-    ("Travel","Travel"),
-    ("Shopping","Shopping"),
-    ("Necessities","Necessities"),
-    ("Entertainment","Entertainment"),
-    ("Other","Other")
- ]
-ADD_EXPENSE_CHOICES = [
-     ("Expense","Expense"),
-     ("Income","Income")
- ]
-PROFESSION_CHOICES =[
-    ("Employee","Employee"),
-    ("Business","Business"),
-    ("Student","Student"),
-    ("Other","Other")
+    ("Food", "Food"),
+    ("Travel", "Travel"),
+    ("Shopping", "Shopping"),
+    ("Necessities", "Necessities"),
+    ("Entertainment", "Entertainment"),
+    ("Other", "Other")
 ]
+
+ADD_EXPENSE_CHOICES = [
+    ("Expense", "Expense"),
+    ("Income", "Income")
+]
+
+PROFESSION_CHOICES = [
+    ("Employee", "Employee"),
+    ("Business", "Business"),
+    ("Student", "Student"),
+    ("Other", "Other")
+]
+
 class Addmoney_info(models.Model):
-    user = models.ForeignKey(User,default = 1, on_delete=models.CASCADE)
-    add_money = models.CharField(max_length = 10 , choices = ADD_EXPENSE_CHOICES )
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    add_money = models.CharField(max_length=10, choices=ADD_EXPENSE_CHOICES)
     quantity = models.BigIntegerField()
-    Date = models.DateField(default = now)
-    Category = models.CharField( max_length = 20, choices = SELECT_CATEGORY_CHOICES , default ='Food')
+    Date = models.DateField(default=now)
+    Category = models.CharField(max_length=20, choices=SELECT_CATEGORY_CHOICES, default='Food')
+
     class Meta:
-        db_table:'addmoney'
-        
+        db_table = 'addmoney'
+
 class UserProfile(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    profession = models.CharField(max_length = 10, choices=PROFESSION_CHOICES)
-    Savings = models.IntegerField( null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profession = models.CharField(max_length=10, choices=PROFESSION_CHOICES)
+    Savings = models.IntegerField(null=True, blank=True)
     income = models.BigIntegerField(null=True, blank=True)
-    image = models.ImageField(upload_to='profile_image',blank=True)
+    image = models.ImageField(upload_to='profile_image', blank=True)
+
     def __str__(self):
-       return self.user.username
+        return self.user.username
+
+
 
 ### Explicación del código:
 
@@ -107,6 +121,7 @@ Ayudará a registrar las tablas en la base de datos.
 
 Registra tus modelos aquí..
 
+```python
 from .models import Addmoney_info
 From django.contrib import admin
 class Addmoney_infoAdmin(admin.ModelAdmin):
@@ -136,6 +151,7 @@ Python manage.py createsuperuser
 
 ## 5. Urls.py
 
+```python
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
@@ -187,6 +203,7 @@ b. include(): Un elemento es devuelto por él, para incluir ese elemento en urlp
 
 ### a. Importación de módulos
 
+```python
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate ,logout
@@ -222,6 +239,7 @@ i. datetime: Se utiliza para obtener la fecha y hora actuales.
 
 ### b. Función de inicio de sesión e índice
 
+```python
 def home(request):
     if request.session.has_key('is_logged'):
         return redirect('/index')
@@ -257,6 +275,7 @@ c. order_by(): Ordena el conjunto de consultas.
 
 ### c. Otras funciones
 
+```python
 def addmoney(request):
     return render(request,'home/addmoney.html')
  
@@ -284,6 +303,7 @@ Solo se puede acceder a estas páginas si el usuario ha iniciado sesión.
 
 d. Actualización del perfil
 
+```python
 def profile_update(request,id):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -309,6 +329,7 @@ Esta función la realiza save().
 
 e. Backend de registro, inicio de sesión y cierre de sesión:
 
+```python
 def handleSignup(request):
     if request.method =='POST':
             # get the post parameters
@@ -407,6 +428,7 @@ c. success(): Si se cumple una condición, muestra el mensaje que se especifica 
 
 ### f. Agregar formulario de dinero y agregar backend de actualización de dinero:
 
+```python
 def addmoney_submission(request):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -447,6 +469,7 @@ addmoney_update() guarda la información del formulario después de que hayamos 
 
 ### g. Backend de edición de gastos y eliminación de gastos:
 
+```python
 def expense_edit(request,id):
     if request.session.has_key('is_logged'):
         addmoney_info = Addmoney_info.objects.get(id=id)
@@ -472,6 +495,7 @@ expense_delete() ayuda a eliminar los gastos.
 
 ### h. Backend de gastos mensuales, semanales y anuales  
 
+```python
 def expense_month(request):
     todays_date = datetime.date.today()
     one_month_ago = todays_date-datetime.timedelta(days=30)
