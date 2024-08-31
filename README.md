@@ -30,13 +30,13 @@ Pip install django
 Cree un nuevo proyecto llamado ExpenseTracker y una aplicación para iniciar el proyecto. 
 Escriba el siguiente comando en la ventana del terminal.
 
+```bash
 django-admin startproject ExpenseTracker
 python mange.py startapp home
+```
 
-Cree una plantilla y una carpeta estática para almacenar tus archivos.
- 
-La carpeta de plantillas contendrá todos los archivos html. 
-
+Cree una plantilla y una carpeta estática para almacenar tus archivos. 
+La carpeta de plantillas contendrá todos los archivos html.
 La carpeta estática contendrá todos los archivos css, imágenes y archivos javascript.
 
 ## 3. Models.py
@@ -44,7 +44,7 @@ La conectividad de la base de datos se realiza con la ayuda de models.py.
 
 Cree los siguientes modelos en models.py archivo en la aplicación de su proyecto.
 
-####Código de Ejemplo
+#### Código de Ejemplo
 
 Aquí está un fragmento de código Python que define algunos modelos de Django:
 
@@ -135,7 +135,7 @@ from .models import UserProfile
 admin.site.register(UserProfile)
 ```
 
-#####Explicación del código:
+##### Explicación del código:
 
 Addmoney_info, UserProfile son los nombres de los modelos que queremos registrar en la base de datos. 
 
@@ -149,8 +149,7 @@ python manage.py makemigrations
 ```
 
 Para acceder a la base de datos, cree el superusuario. 
-
-Para crear un superusuario, ejecute el siguiente comando en la ventana de su terminal.
+Ejecute el siguiente comando en la ventana de su terminal.
 
 ```bash
 Python manage.py createsuperuser
@@ -197,11 +196,11 @@ urlpatterns = [
 ]
 ```
 
-#####Explicación del código:
+##### Explicación del código:
 
-Estos son los nombres de las urls a las que podemos acceder.
+#####Estos son los nombres de las urls a las que podemos acceder.
 
-Si intentamos acceder a urls distintas a estas, nos dará un error.
+###### Si intentamos acceder a urls distintas a estas, nos dará un error.
 
 a. path(): Se utiliza para enrutar la url con las vistas de funciones en la carpeta de tu aplicación.
 
@@ -226,7 +225,7 @@ import datetime
 from django.utils import timezone
 ```
 
-#####Explicación del código:
+##### Explicación del código:
 
 a. Render: Devuelve el objeto Httpresponse y combina la plantilla con el diccionario que se menciona en ella.
 
@@ -248,7 +247,7 @@ i. datetime: Se utiliza para obtener la fecha y hora actuales.
 
 ### b. Función de inicio de sesión e índice
 
-```
+```python
 def home(request):
     if request.session.has_key('is_logged'):
         return redirect('/index')
@@ -302,9 +301,9 @@ def profile_edit(request,id):
     return redirect("/home")
 ```
 
-#####Explicación del código:
+##### Explicación del código:
 
-La primera función redirige al usuario a la página donde podemos introducir nuestros gastos e ingresos. 
+La primera función redirige al usuario a la página donde podemos introducir nuestros gastos e ingresos.
 
 profile() redirige al usuario a la página de perfil donde se muestra la información del usuario. 
 
@@ -331,7 +330,7 @@ def profile_update(request,id):
     return redirect("/home")
 ```   
 
-#####Explicación del código:
+##### Explicación del código:
 
 profile_update() realiza el backend del formulario de edición de perfil. 
 
@@ -417,7 +416,7 @@ def handleLogout(request):
 ```
 
 
-#####Explicación del código:
+##### Explicación del código:
 
 handlesignup() maneja el backend del formulario de registro. Uname, fname, lname, email, pass1, pass2, income, savings y profession
 
@@ -475,7 +474,7 @@ def addmoney_update(request,id):
     return redirect("/home")
 ```  
 
-#####Explicación del código:
+##### Explicación del código:
 
 addmoney_submission() maneja el backend del formulario que completamos para nuestros gastos diarios.
 
@@ -500,7 +499,7 @@ def expense_delete(request,id):
     return redirect("/home")
 ``` 
 
-#####Explicación del código:
+##### Explicación del código:
 
 expense_edit() redirige al usuario al formulario de edición y también extrae los detalles del usuario de la base de datos y los
 
@@ -656,7 +655,7 @@ def info(request):
     return render(request,'home/info.html')
 ```
 
-#####Explicación del código:
+##### Explicación del código:
 
 expense_month() obtiene los datos de los gastos del mes actual. 
 
@@ -672,17 +671,17 @@ weekly() obtiene la cantidad ahorrada en un mes y también los gastos generales 
 
 ## Salida del rastreador de gastos de Python:
 
-####Formulario de inicio de sesión:
+#### Formulario de inicio de sesión:
 
 ![image](https://github.com/user-attachments/assets/231fe8f7-d304-4823-8059-e72a7e6fa5e7)
 
-####Dashboard:
+#### Dashboard:
 
 ![image](https://github.com/user-attachments/assets/c7492554-91f7-4a01-8732-8bbc02b94916)
 
 ![image](https://github.com/user-attachments/assets/1fbdf19f-af5f-4593-bfd8-b73cacfeaef6)
 
-####Página de Gastos Mensuales:
+#### Página de Gastos Mensuales:
 
 ![image](https://github.com/user-attachments/assets/9666bdc5-7ed9-43b7-aac4-c988146519f6)
 
