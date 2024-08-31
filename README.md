@@ -96,7 +96,7 @@ class UserProfile(models.Model):
     image = models.ImageField(upload_to='profile_image', blank=True)
 
     def __str__(self):
-        return self.user.username'''
+        return self.user.username```
 
 
 
@@ -130,7 +130,7 @@ admin.site.register(Addmoney_info,Addmoney_infoAdmin)
 from django.contrib.sessions.models import Session
 admin.site.register(Session)
 from .models import UserProfile
-admin.site.register(UserProfile)
+admin.site.register(UserProfile)```
 
 Explicación del código:
 
@@ -187,7 +187,7 @@ urlpatterns = [
     path('<int:id>/profile_update/',views.profile_update,name="profile_update"),
     path('info/',views.info,name="info"),
     path('info_year/',views.info_year,name="info_year"),
-]
+]```
 
 Explicación del código:
 
@@ -215,7 +215,7 @@ from django.core.paginator import Paginator, EmptyPage , PageNotAnInteger
 from django.db.models import Sum
 from django.http import JsonResponse
 import datetime
-from django.utils import timezone
+from django.utils import timezone```
 
 Explicación del código:
 
@@ -259,7 +259,7 @@ def index(request):
         }
     if request.session.has_key('is_logged'):
         return render(request,'home/index.html',context)
-    return redirect('home')
+    return redirect('home')```
 
   ### Explicación del código:
 
