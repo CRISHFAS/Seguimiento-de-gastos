@@ -10,7 +10,7 @@ Al completar el formulario de registro, la persona también deberán completar l
 Algunas personas ganan a diario, por lo que sus ingresos también se pueden agregar de forma regular. 
 Los detalles de los gastos se mostrarán en forma de gráfico circular de forma semanal, mensual y anual. La instalación de django es imprescindible para comenzar con el proyecto Expense Tracker.
 
-## Estructura de archivos
+## Estructura de archivos:
 
 1. Instale el marco django
 2. Crear un proyecto y una aplicación
@@ -22,7 +22,9 @@ Los detalles de los gastos se mostrarán en forma de gráfico circular de forma 
 ## 1. Instale el framework django:
 Escriba el siguiente comando en cmd o en la ventana del terminal.
 
+```bash
 Pip install django
+```
 
 ## 2. Cree un proyecto y una aplicación:
 Cree un nuevo proyecto llamado ExpenseTracker y una aplicación para iniciar el proyecto. 
@@ -31,8 +33,8 @@ Escriba el siguiente comando en la ventana del terminal.
 django-admin startproject ExpenseTracker
 python mange.py startapp home
 
-Cree una plantilla y una carpeta estática para almacenar tus archivos
-. 
+Cree una plantilla y una carpeta estática para almacenar tus archivos.
+ 
 La carpeta de plantillas contendrá todos los archivos html. 
 
 La carpeta estática contendrá todos los archivos css, imágenes y archivos javascript.
@@ -42,7 +44,7 @@ La conectividad de la base de datos se realiza con la ayuda de models.py.
 
 Cree los siguientes modelos en models.py archivo en la aplicación de su proyecto.
 
-# Código de Ejemplo
+####Código de Ejemplo
 
 Aquí está un fragmento de código Python que define algunos modelos de Django:
 
@@ -100,7 +102,7 @@ class UserProfile(models.Model):
 ```
 
 
-### Explicación del código:
+##### Explicación del código:
 
 SELECT_CATEGORY_CHOICES , EXPENSE_CHOICES PROFESSION_CHOICES contienen la lista de opciones que se darán al completar el formulario de gastos.
 
@@ -133,7 +135,7 @@ from .models import UserProfile
 admin.site.register(UserProfile)
 ```
 
-Explicación del código:
+#####Explicación del código:
 
 Addmoney_info, UserProfile son los nombres de los modelos que queremos registrar en la base de datos. 
 
@@ -141,14 +143,18 @@ list_display contiene el nombre de las columnas que se mostrarán en la base de 
 
 Para almacenar estos modelos en la base de datos, ejecute el siguiente comando:
 
+```bash
 python manage.py makemigrations
      python manage.py migrate
+```
 
 Para acceder a la base de datos, cree el superusuario. 
 
 Para crear un superusuario, ejecute el siguiente comando en la ventana de su terminal.
 
+```bash
 Python manage.py createsuperuser
+```
 
 ## 5. Urls.py
 
@@ -191,7 +197,7 @@ urlpatterns = [
 ]
 ```
 
-Explicación del código:
+#####Explicación del código:
 
 Estos son los nombres de las urls a las que podemos acceder.
 
@@ -220,7 +226,7 @@ import datetime
 from django.utils import timezone
 ```
 
-Explicación del código:
+#####Explicación del código:
 
 a. Render: Devuelve el objeto Httpresponse y combina la plantilla con el diccionario que se menciona en ella.
 
@@ -265,7 +271,7 @@ def index(request):
     return redirect('home')
 ```
 
-  ### Explicación del código:
+##### Explicación del código:
 
 home() es una función que permite al usuario acceder al panel una vez que el usuario ha iniciado sesión. 
 
@@ -279,7 +285,7 @@ c. order_by(): Ordena el conjunto de consultas.
 
 ### c. Otras funciones
 
-```
+```python
 def addmoney(request):
     return render(request,'home/addmoney.html')
  
@@ -296,7 +302,7 @@ def profile_edit(request,id):
     return redirect("/home")
 ```
 
-Explicación del código:
+#####Explicación del código:
 
 La primera función redirige al usuario a la página donde podemos introducir nuestros gastos e ingresos. 
 
@@ -308,7 +314,7 @@ Solo se puede acceder a estas páginas si el usuario ha iniciado sesión.
 
 d. Actualización del perfil
 
-```
+```python
 def profile_update(request,id):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -325,7 +331,7 @@ def profile_update(request,id):
     return redirect("/home")
 ```   
 
-Explicación del código:
+#####Explicación del código:
 
 profile_update() realiza el backend del formulario de edición de perfil. 
 
@@ -335,7 +341,7 @@ Esta función la realiza save().
 
 e. Backend de registro, inicio de sesión y cierre de sesión:
 
-```
+```python
 def handleSignup(request):
     if request.method =='POST':
             # get the post parameters
@@ -411,14 +417,14 @@ def handleLogout(request):
 ```
 
 
-Explicación del código:
+#####Explicación del código:
 
 handlesignup() maneja el backend del formulario de registro. Uname, fname, lname, email, pass1, pass2, income, savings y profession
 
 almacenarán la información del formulario en estas variables.
 
-Hay varias condiciones para inscribirse. El nombre de usuario debe ser único, pass1 y pass 2 deben ser iguales y también la longitud
-
+Hay varias condiciones para inscribirse...  
+El nombre de usuario debe ser único, pass1 y pass 2 deben ser iguales y también la longitud  
 del nombre de usuario debe tener un máximo de 15 caracteres. 
 
 handlelogin() maneja el backend de la página de inicio de sesión. Si la información introducida por el usuario es correcta, el usuario
@@ -435,7 +441,7 @@ c. success(): Si se cumple una condición, muestra el mensaje que se especifica 
 
 ### f. Agregar formulario de dinero y agregar backend de actualización de dinero:
 
-```
+```python
 def addmoney_submission(request):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -469,7 +475,7 @@ def addmoney_update(request,id):
     return redirect("/home")
 ```  
 
-Explicación del código:
+#####Explicación del código:
 
 addmoney_submission() maneja el backend del formulario que completamos para nuestros gastos diarios.
 
@@ -477,7 +483,7 @@ addmoney_update() guarda la información del formulario después de que hayamos 
 
 ### g. Backend de edición de gastos y eliminación de gastos:
 
-```
+```python
 def expense_edit(request,id):
     if request.session.has_key('is_logged'):
         addmoney_info = Addmoney_info.objects.get(id=id)
@@ -494,7 +500,7 @@ def expense_delete(request,id):
     return redirect("/home")
 ``` 
 
-Explicación del código:
+#####Explicación del código:
 
 expense_edit() redirige al usuario al formulario de edición y también extrae los detalles del usuario de la base de datos y los
 
@@ -504,7 +510,7 @@ expense_delete() ayuda a eliminar los gastos.
 
 ### h. Backend de gastos mensuales, semanales y anuales  
 
-```
+```python
 def expense_month(request):
     todays_date = datetime.date.today()
     one_month_ago = todays_date-datetime.timedelta(days=30)
@@ -650,7 +656,7 @@ def info(request):
     return render(request,'home/info.html')
 ```
 
-Explicación del código:
+#####Explicación del código:
 
 expense_month() obtiene los datos de los gastos del mes actual. 
 
@@ -664,19 +670,19 @@ expense_week() y info_year() realizan la misma función que expense_month() pero
 
 weekly() obtiene la cantidad ahorrada en un mes y también los gastos generales de un usuario.
 
-# Salida del rastreador de gastos de Python:
+## Salida del rastreador de gastos de Python:
 
-Formulario de inicio de sesión:
+####Formulario de inicio de sesión:
 
 ![image](https://github.com/user-attachments/assets/231fe8f7-d304-4823-8059-e72a7e6fa5e7)
 
-Dashboard:
+####Dashboard:
 
 ![image](https://github.com/user-attachments/assets/c7492554-91f7-4a01-8732-8bbc02b94916)
 
 ![image](https://github.com/user-attachments/assets/1fbdf19f-af5f-4593-bfd8-b73cacfeaef6)
 
-Página de Gastos Mensuales:
+####Página de Gastos Mensuales:
 
 ![image](https://github.com/user-attachments/assets/9666bdc5-7ed9-43b7-aac4-c988146519f6)
 
