@@ -57,8 +57,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Sum
 
-# Create your models here.
-
+# Opciones de categoría para gastos
 SELECT_CATEGORY_CHOICES = [
     ("Food", "Food"),
     ("Travel", "Travel"),
@@ -68,11 +67,13 @@ SELECT_CATEGORY_CHOICES = [
     ("Other", "Other")
 ]
 
+# Opciones para el tipo de adición de dinero
 ADD_EXPENSE_CHOICES = [
     ("Expense", "Expense"),
     ("Income", "Income")
 ]
 
+# Opciones para la profesión
 PROFESSION_CHOICES = [
     ("Employee", "Employee"),
     ("Business", "Business"),
@@ -80,20 +81,20 @@ PROFESSION_CHOICES = [
     ("Other", "Other")
 ]
 
-class Addmoney_info(models.Model):
+class AddMoneyInfo(models.Model):
     user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
     add_money = models.CharField(max_length=10, choices=ADD_EXPENSE_CHOICES)
     quantity = models.BigIntegerField()
-    Date = models.DateField(default=now)
-    Category = models.CharField(max_length=20, choices=SELECT_CATEGORY_CHOICES, default='Food')
+    date = models.DateField(default=now)
+    category = models.CharField(max_length=20, choices=SELECT_CATEGORY_CHOICES, default='Food')
 
     class Meta:
-        db_table = 'addmoney'
+        db_table = 'add_money_info'
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profession = models.CharField(max_length=10, choices=PROFESSION_CHOICES)
-    Savings = models.IntegerField(null=True, blank=True)
+    savings = models.IntegerField(null=True, blank=True)
     income = models.BigIntegerField(null=True, blank=True)
     image = models.ImageField(upload_to='profile_image', blank=True)
 
@@ -124,15 +125,16 @@ Ayudará a registrar las tablas en la base de datos.
 Registra tus modelos aquí..
 
 ```python
-from .models import Addmoney_info
-From django.contrib import admin
-class Addmoney_infoAdmin(admin.ModelAdmin):
-    list_display=("user","quantity","Date","Category","add_money")
-admin.site.register(Addmoney_info,Addmoney_infoAdmin)
+from django.contrib import admin
+from .models import Addmoney_info, UserProfile
 from django.contrib.sessions.models import Session
-admin.site.register(Session)
-from .models import UserProfile
+
+class Addmoney_infoAdmin(admin.ModelAdmin):
+    list_display = ("user", "quantity", "Date", "Category", "add_money")
+
+admin.site.register(Addmoney_info, Addmoney_infoAdmin)
 admin.site.register(UserProfile)
+admin.site.register(Session)
 ```
 
 ##### Explicación del código:
@@ -145,7 +147,7 @@ Para almacenar estos modelos en la base de datos, ejecute el siguiente comando:
 
 ```bash
 python manage.py makemigrations
-     python manage.py migrate
+python manage.py migrate
 ```
 
 Para acceder a la base de datos, cree el superusuario. 
@@ -159,40 +161,49 @@ Python manage.py createsuperuser
 
 ```python
 from django.contrib import admin
-from django.urls import path
-from django.urls import include
+from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
- 
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('index/', views.index, name='index'),
-    path('register/',views.register,name='register'),
-    path('handleSignup/',views.handleSignup,name='handleSignup'),
-    path('handlelogin/',views.handlelogin,name='handlelogin'),
-    path('handleLogout/',views.handleLogout,name='handleLogout'),
-    path('reset_password/',auth_views.PasswordResetView.as_view(template_name = "home/reset_password.html"),name='reset_password'),
-    path('reset_password_sent/',auth_views.PasswordResetDoneView.as_view(template_name="home/reset_password_sent.html"),name='password_reset_done'),
-    path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name ="home/password_reset_form.html"),name='password_reset_confirm'),
-    path('reset_password_complete/',auth_views.PasswordResetView.as_view(template_name ="home/password_reset_done.html"),name='password_reset_complete'),
-    path('addmoney/',views.addmoney,name='addmoney'),
-    path('addmoney_submission/',views.addmoney_submission,name='addmoney_submission'),
-    path('charts/',views.charts,name='charts'),
-    path('tables/',views.tables,name='tables'),
-    path('expense_edit/<int:id>',views.expense_edit,name='expense_edit'),
-    path('<int:id>/addmoney_update/', views.addmoney_update, name="addmoney_update") ,
-    path('expense_delete/<int:id>',views.expense_delete,name='expense_delete'),
-    path('profile/',views.profile,name = 'profile'),
-    path('expense_month/',views.expense_month, name = 'expense_month'),
-    path('stats/',views.stats, name = 'stats'),
-    path('expense_week/',views.expense_week, name = 'expense_week'),
-    path('weekly/',views.weekly, name = 'weekly'),
-    path('check/',views.check,name="check"),
-    path('search/',views.search,name="search"),
-    path('<int:id>/profile_edit/',views.profile_edit,name="profile_edit"),
-    path('<int:id>/profile_update/',views.profile_update,name="profile_update"),
-    path('info/',views.info,name="info"),
-    path('info_year/',views.info_year,name="info_year"),
+    path('register/', views.register, name='register'),
+    path('handleSignup/', views.handleSignup, name='handleSignup'),
+    path('handlelogin/', views.handlelogin, name='handlelogin'),
+    path('handleLogout/', views.handleLogout, name='handleLogout'),
+
+    path('reset_password/', 
+         auth_views.PasswordResetView.as_view(template_name="home/reset_password.html"),
+         name='reset_password'),
+    path('reset_password_sent/', 
+         auth_views.PasswordResetDoneView.as_view(template_name="home/reset_password_sent.html"),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', 
+         auth_views.PasswordResetConfirmView.as_view(template_name="home/password_reset_form.html"),
+         name='password_reset_confirm'),
+    path('reset_password_complete/', 
+         auth_views.PasswordResetCompleteView.as_view(template_name="home/password_reset_done.html"),
+         name='password_reset_complete'),
+
+    path('addmoney/', views.addmoney, name='addmoney'),
+    path('addmoney_submission/', views.addmoney_submission, name='addmoney_submission'),
+    path('charts/', views.charts, name='charts'),
+    path('tables/', views.tables, name='tables'),
+    path('expense_edit/<int:id>/', views.expense_edit, name='expense_edit'),
+    path('<int:id>/addmoney_update/', views.addmoney_update, name='addmoney_update'),
+    path('expense_delete/<int:id>/', views.expense_delete, name='expense_delete'),
+    path('profile/', views.profile, name='profile'),
+    path('expense_month/', views.expense_month, name='expense_month'),
+    path('stats/', views.stats, name='stats'),
+    path('expense_week/', views.expense_week, name='expense_week'),
+    path('weekly/', views.weekly, name='weekly'),
+    path('check/', views.check, name='check'),
+    path('search/', views.search, name='search'),
+    path('<int:id>/profile_edit/', views.profile_edit, name='profile_edit'),
+    path('<int:id>/profile_update/', views.profile_update, name='profile_update'),
+    path('info/', views.info, name='info'),
+    path('info_year/', views.info_year, name='info_year'),
 ]
 ```
 
@@ -211,18 +222,17 @@ b. include(): Un elemento es devuelto por él, para incluir ese elemento en urlp
 ### a. Importación de módulos
 
 ```python
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate ,logout
-from django.contrib.auth import login as dj_login
+from django.contrib.auth import authenticate, logout, login as dj_login
 from django.contrib.auth.models import User
-from .models import Addmoney_info,UserProfile
+from .models import Addmoney_info, UserProfile
 from django.contrib.sessions.models import Session
-from django.core.paginator import Paginator, EmptyPage , PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum
 from django.http import JsonResponse
-import datetime
 from django.utils import timezone
+import datetime
 ```
 
 ##### Explicación del código:
@@ -249,24 +259,23 @@ i. datetime: Se utiliza para obtener la fecha y hora actuales.
 
 ```python
 def home(request):
-    if request.session.has_key('is_logged'):
+    if 'is_logged' in request.session:
         return redirect('/index')
-    return render(request,'home/login.html')
-    return HttpResponse('This is home')
+    return render(request, 'home/login.html')
+
 def index(request):
-    if request.session.has_key('is_logged'):
-        user_id = request.session["user_id"]
+    if 'is_logged' in request.session:
+        user_id = request.session.get("user_id")
         user = User.objects.get(id=user_id)
         addmoney_info = Addmoney_info.objects.filter(user=user).order_by('-Date')
-        paginator = Paginator(addmoney_info , 4)
+        paginator = Paginator(addmoney_info, 4)
         page_number = request.GET.get('page')
-        page_obj = Paginator.get_page(paginator,page_number)
+        page_obj = paginator.get_page(page_number)
         context = {
-             'add_info' : addmoney_info,
-           'page_obj' : page_obj
+            'add_info': addmoney_info,
+            'page_obj': page_obj
         }
-    if request.session.has_key('is_logged'):
-        return render(request,'home/index.html',context)
+        return render(request, 'home/index.html', context)
     return redirect('home')
 ```
 
@@ -286,19 +295,18 @@ c. order_by(): Ordena el conjunto de consultas.
 
 ```python
 def addmoney(request):
-    return render(request,'home/addmoney.html')
- 
+    return render(request, 'home/addmoney.html')
+
 def profile(request):
-    if request.session.has_key('is_logged'):
-        return render(request,'home/profile.html')
+    if 'is_logged' in request.session:
+        return render(request, 'home/profile.html')
     return redirect('/home')
- 
-def profile_edit(request,id):
-    if request.session.has_key('is_logged'):
+
+def profile_edit(request, id):
+    if 'is_logged' in request.session:
         add = User.objects.get(id=id)
- 
-       return render(request,'home/profile_edit.html',{'add':add})
-    return redirect("/home")
+        return render(request, 'home/profile_edit.html', {'add': add})
+    return redirect('/home')
 ```
 
 ##### Explicación del código:
@@ -314,17 +322,21 @@ Solo se puede acceder a estas páginas si el usuario ha iniciado sesión.
 d. Actualización del perfil
 
 ```python
-def profile_update(request,id):
-    if request.session.has_key('is_logged'):
+def profile_update(request, id):
+    if 'is_logged' in request.session:
         if request.method == "POST":
             user = User.objects.get(id=id)
-            user.first_name = request.POST["fname"]
-            user.last_name = request.POST["lname"]
-            user.email = request.POST["email"]
-            user.userprofile.Savings = request.POST["Savings"]
-            user.userprofile.income = request.POST["income"]
-            user.userprofile.profession = request.POST["profession"]
-            user.userprofile.save()
+            user.first_name = request.POST.get("fname")
+            user.last_name = request.POST.get("lname")
+            user.email = request.POST.get("email")
+
+            # Ensure that userprofile exists and update fields
+            if hasattr(user, 'userprofile'):
+                user.userprofile.Savings = request.POST.get("Savings")
+                user.userprofile.income = request.POST.get("income")
+                user.userprofile.profession = request.POST.get("profession")
+                user.userprofile.save()
+
             user.save()
             return redirect("/profile")
     return redirect("/home")
@@ -342,77 +354,81 @@ e. Backend de registro, inicio de sesión y cierre de sesión:
 
 ```python
 def handleSignup(request):
-    if request.method =='POST':
-            # get the post parameters
-            uname = request.POST["uname"]
-            fname=request.POST["fname"]
-            lname=request.POST["lname"]
-            email = request.POST["email"]
-            profession = request.POST['profession']
-            Savings = request.POST['Savings']
-            income = request.POST['income']
-            pass1 = request.POST["pass1"]
-            pass2 = request.POST["pass2"]
-            profile = UserProfile(Savings = Savings,profession=profession,income=income)
-            # check for errors in input
-            if request.method == 'POST':
-                try:
-                    user_exists = User.objects.get(username=request.POST['uname'])
-                    messages.error(request," Username already taken, Try something else!!!")
-                    return redirect("/register")    
-                except User.DoesNotExist:
-                    if len(uname)>15:
-                        messages.error(request," Username must be max 15 characters, Please try again")
-                        return redirect("/register")
-            
-                    if not uname.isalnum():
-                        messages.error(request," Username should only contain letters and numbers, Please try again")
-                        return redirect("/register")
-            
-                    if pass1 != pass2:
-                        messages.error(request," Password do not match, Please try again")
-                        return redirect("/register")
-            
-            # create the user
-            user = User.objects.create_user(uname, email, pass1)
-            user.first_name=fname
-            user.last_name=lname
+    if request.method == 'POST':
+        # Get the post parameters
+        uname = request.POST.get("uname")
+        fname = request.POST.get("fname")
+        lname = request.POST.get("lname")
+        email = request.POST.get("email")
+        profession = request.POST.get('profession')
+        savings = request.POST.get('Savings')
+        income = request.POST.get('income')
+        pass1 = request.POST.get("pass1")
+        pass2 = request.POST.get("pass2")
+        
+        # Check for errors in input
+        try:
+            User.objects.get(username=uname)
+            messages.error(request, "Username already taken, Try something else!!!")
+            return redirect("/register")
+        except User.DoesNotExist:
+            if len(uname) > 15:
+                messages.error(request, "Username must be max 15 characters, Please try again")
+                return redirect("/register")
+
+            if not uname.isalnum():
+                messages.error(request, "Username should only contain letters and numbers, Please try again")
+                return redirect("/register")
+
+            if pass1 != pass2:
+                messages.error(request, "Password does not match, Please try again")
+                return redirect("/register")
+
+            # Create the user
+            user = User.objects.create_user(username=uname, email=email, password=pass1)
+            user.first_name = fname
+            user.last_name = lname
             user.email = email
-            # profile = UserProfile.objects.all()
- 
+            
+            # Save the user
             user.save()
-            # p1=profile.save(commit=False)
-            profile.user = user
+            
+            # Create and save user profile
+            profile = UserProfile(Savings=savings, profession=profession, income=income, user=user)
             profile.save()
-            messages.success(request," Your account has been successfully created")
+            
+            messages.success(request, "Your account has been successfully created")
             return redirect("/")
     else:
-        return HttpResponse('404 - NOT FOUND ')
-    return redirect('/login')
- 
+        return HttpResponse('404 - NOT FOUND')
+    
 def handlelogin(request):
-    if request.method =='POST':
-        # get the post parameters
-        loginuname = request.POST["loginuname"]
-        loginpassword1=request.POST["loginpassword1"]
+    if request.method == 'POST':
+        # Get the post parameters
+        loginuname = request.POST.get("loginuname")
+        loginpassword1 = request.POST.get("loginpassword1")
+        
         user = authenticate(username=loginuname, password=loginpassword1)
         if user is not None:
             dj_login(request, user)
             request.session['is_logged'] = True
-            user = request.user.id 
-            request.session["user_id"] = user
-            messages.success(request, " Successfully logged in")
+            request.session["user_id"] = user.id
+            messages.success(request, "Successfully logged in")
             return redirect('/index')
         else:
-            messages.error(request," Invalid Credentials, Please try again")  
-            return redirect("/")  
-    return HttpResponse('404-not found')
+            messages.error(request, "Invalid credentials, Please try again")
+            return redirect("/")
+    
+    return HttpResponse('404 - NOT FOUND')
+
 def handleLogout(request):
+    if 'is_logged' in request.session:
         del request.session['is_logged']
-        del request.session["user_id"] 
-        logout(request)
-        messages.success(request, " Successfully logged out")
-        return redirect('home')
+        del request.session["user_id"]
+    
+    logout(request)
+    messages.success(request, "Successfully logged out")
+    return redirect('home')
 ```
 
 
@@ -442,35 +458,50 @@ c. success(): Si se cumple una condición, muestra el mensaje que se especifica 
 
 ```python
 def addmoney_submission(request):
-    if request.session.has_key('is_logged'):
+    if 'is_logged' in request.session:
         if request.method == "POST":
-            user_id = request.session["user_id"]
-            user1 = User.objects.get(id=user_id)
-            addmoney_info1 = Addmoney_info.objects.filter(user=user1).order_by('-Date')
-            add_money = request.POST["add_money"]
-            quantity = request.POST["quantity"]
-            Date = request.POST["Date"]
-            Category = request.POST["Category"]
-            add = Addmoney_info(user = user1,add_money=add_money,quantity=quantity,Date = Date,Category= Category)
+            user_id = request.session.get("user_id")
+            user = User.objects.get(id=user_id)
+            addmoney_info_list = Addmoney_info.objects.filter(user=user).order_by('-Date')
+            
+            add_money = request.POST.get("add_money")
+            quantity = request.POST.get("quantity")
+            date = request.POST.get("Date")
+            category = request.POST.get("Category")
+            
+            add = Addmoney_info(
+                user=user,
+                add_money=add_money,
+                quantity=quantity,
+                Date=date,
+                Category=category
+            )
             add.save()
-            paginator = Paginator(addmoney_info1, 4)
+            
+            paginator = Paginator(addmoney_info_list, 4)
             page_number = request.GET.get('page')
-            page_obj = Paginator.get_page(paginator,page_number)
+            page_obj = paginator.get_page(page_number)
+            
             context = {
-                'page_obj' : page_obj
-                }
-            return render(request,'home/index.html',context)
+                'page_obj': page_obj
+            }
+            return render(request, 'home/index.html', context)
+    
     return redirect('/index')
-def addmoney_update(request,id):
-    if request.session.has_key('is_logged'):
+
+def addmoney_update(request, id):
+    if 'is_logged' in request.session:
         if request.method == "POST":
-            add  = Addmoney_info.objects.get(id=id)
-            add .add_money = request.POST["add_money"]
-            add.quantity = request.POST["quantity"]
-            add.Date = request.POST["Date"]
-            add.Category = request.POST["Category"]
-            add .save()
+            add = Addmoney_info.objects.get(id=id)
+            
+            add.add_money = request.POST.get("add_money")
+            add.quantity = request.POST.get("quantity")
+            add.Date = request.POST.get("Date")
+            add.Category = request.POST.get("Category")
+            
+            add.save()
             return redirect("/index")
+    
     return redirect("/home")
 ```  
 
@@ -483,19 +514,19 @@ addmoney_update() guarda la información del formulario después de que hayamos 
 ### g. Backend de edición de gastos y eliminación de gastos:
 
 ```python
-def expense_edit(request,id):
-    if request.session.has_key('is_logged'):
+def expense_edit(request, id):
+    if 'is_logged' in request.session:
         addmoney_info = Addmoney_info.objects.get(id=id)
-        user_id = request.session["user_id"]
-        user1 = User.objects.get(id=user_id)
-        return render(request,'home/expense_edit.html',{'addmoney_info':addmoney_info})
-    return redirect("/home")  
- 
-def expense_delete(request,id):
-    if request.session.has_key('is_logged'):
+        return render(request, 'home/expense_edit.html', {'addmoney_info': addmoney_info})
+    
+    return redirect("/home")
+
+def expense_delete(request, id):
+    if 'is_logged' in request.session:
         addmoney_info = Addmoney_info.objects.get(id=id)
         addmoney_info.delete()
         return redirect("/index")
+    
     return redirect("/home")
 ``` 
 
@@ -512,147 +543,141 @@ expense_delete() ayuda a eliminar los gastos.
 ```python
 def expense_month(request):
     todays_date = datetime.date.today()
-    one_month_ago = todays_date-datetime.timedelta(days=30)
+    one_month_ago = todays_date - datetime.timedelta(days=30)
     user_id = request.session["user_id"]
-    user1 = User.objects.get(id=user_id)
-    addmoney = Addmoney_info.objects.filter(user = user1,Date__gte=one_month_ago,Date__lte=todays_date)
-    finalrep ={}
- 
-    def get_Category(addmoney_info):
-        # if addmoney_info.add_money=="Expense":
-        return addmoney_info.Category    
-    Category_list = list(set(map(get_Category,addmoney)))
- 
-    def get_expense_category_amount(Category,add_money):
-        quantity = 0 
-        filtered_by_category = addmoney.filter(Category = Category,add_money="Expense") 
+    user = User.objects.get(id=user_id)
+    addmoney = Addmoney_info.objects.filter(user=user, Date__gte=one_month_ago, Date__lte=todays_date)
+    final_rep = {}
+
+    def get_category(addmoney_info):
+        return addmoney_info.Category
+
+    category_list = list(set(map(get_category, addmoney)))
+
+    def get_expense_category_amount(category, add_money):
+        quantity = 0
+        filtered_by_category = addmoney.filter(Category=category, add_money="Expense")
         for item in filtered_by_category:
-            quantity+=item.quantity
+            quantity += item.quantity
         return quantity
- 
-    for x in addmoney:
-        for y in Category_list:
-            finalrep[y]= get_expense_category_amount(y,"Expense")
- 
-    return JsonResponse({'expense_category_data': finalrep}, safe=False)
- 
- 
+
+    for category in category_list:
+        final_rep[category] = get_expense_category_amount(category, "Expense")
+
+    return JsonResponse({'expense_category_data': final_rep}, safe=False)
+
 def stats(request):
-    if request.session.has_key('is_logged') :
+    if 'is_logged' in request.session:
         todays_date = datetime.date.today()
-        one_month_ago = todays_date-datetime.timedelta(days=30)
+        one_month_ago = todays_date - datetime.timedelta(days=30)
         user_id = request.session["user_id"]
-        user1 = User.objects.get(id=user_id)
-        addmoney_info = Addmoney_info.objects.filter(user = user1,Date__gte=one_month_ago,Date__lte=todays_date)
-        sum = 0 
-        for i in addmoney_info:
-            if i.add_money == 'Expense':
-                sum=sum+i.quantity
-        addmoney_info.sum = sum
-        sum1 = 0 
-        for i in addmoney_info:
-            if i.add_money == 'Income':
-                sum1 =sum1+i.quantity
-        addmoney_info.sum1 = sum1
-        x= user1.userprofile.Savings+addmoney_info.sum1 - addmoney_info.sum
-        y= user1.userprofile.Savings+addmoney_info.sum1 - addmoney_info.sum
-        if x<0:
-            messages.warning(request,'Your expenses exceeded your savings')
+        user = User.objects.get(id=user_id)
+        addmoney_info = Addmoney_info.objects.filter(user=user, Date__gte=one_month_ago, Date__lte=todays_date)
+        
+        expense_sum = sum(i.quantity for i in addmoney_info if i.add_money == 'Expense')
+        income_sum = sum(i.quantity for i in addmoney_info if i.add_money == 'Income')
+
+        x = user.userprofile.Savings + income_sum - expense_sum
+        y = x
+
+        if x < 0:
+            messages.warning(request, 'Your expenses exceeded your savings')
             x = 0
-        if x>0:
+        if x > 0:
             y = 0
-        addmoney_info.x = abs(x)
-        addmoney_info.y = abs(y)
-        return render(request,'home/stats.html',{'addmoney':addmoney_info})
- 
+
+        return render(request, 'home/stats.html', {
+            'expense_sum': expense_sum,
+            'income_sum': income_sum,
+            'x': abs(x),
+            'y': abs(y)
+        })
+
 def expense_week(request):
     todays_date = datetime.date.today()
-    one_week_ago = todays_date-datetime.timedelta(days=7)
+    one_week_ago = todays_date - datetime.timedelta(days=7)
     user_id = request.session["user_id"]
-    user1 = User.objects.get(id=user_id)
-    addmoney = Addmoney_info.objects.filter(user = user1,Date__gte=one_week_ago,Date__lte=todays_date)
-    finalrep ={}
- 
-    def get_Category(addmoney_info):
+    user = User.objects.get(id=user_id)
+    addmoney = Addmoney_info.objects.filter(user=user, Date__gte=one_week_ago, Date__lte=todays_date)
+    final_rep = {}
+
+    def get_category(addmoney_info):
         return addmoney_info.Category
-    Category_list = list(set(map(get_Category,addmoney)))
- 
- 
-    def get_expense_category_amount(Category,add_money):
-        quantity = 0 
-        filtered_by_category = addmoney.filter(Category = Category,add_money="Expense") 
+
+    category_list = list(set(map(get_category, addmoney)))
+
+    def get_expense_category_amount(category, add_money):
+        quantity = 0
+        filtered_by_category = addmoney.filter(Category=category, add_money="Expense")
         for item in filtered_by_category:
-            quantity+=item.quantity
+            quantity += item.quantity
         return quantity
- 
-    for x in addmoney:
-        for y in Category_list:
-            finalrep[y]= get_expense_category_amount(y,"Expense")
- 
-    return JsonResponse({'expense_category_data': finalrep}, safe=False)
-    
+
+    for category in category_list:
+        final_rep[category] = get_expense_category_amount(category, "Expense")
+
+    return JsonResponse({'expense_category_data': final_rep}, safe=False)
+
 def weekly(request):
-    if request.session.has_key('is_logged') :
+    if 'is_logged' in request.session:
         todays_date = datetime.date.today()
-        one_week_ago = todays_date-datetime.timedelta(days=7)
+        one_week_ago = todays_date - datetime.timedelta(days=7)
         user_id = request.session["user_id"]
-        user1 = User.objects.get(id=user_id)
-        addmoney_info = Addmoney_info.objects.filter(user = user1,Date__gte=one_week_ago,Date__lte=todays_date)
-        sum = 0 
-        for i in addmoney_info:
-            if i.add_money == 'Expense':
-                sum=sum+i.quantity
-        addmoney_info.sum = sum
-        sum1 = 0 
-        for i in addmoney_info:
-            if i.add_money == 'Income':
-                sum1 =sum1+i.quantity
-        addmoney_info.sum1 = sum1
-        x= user1.userprofile.Savings+addmoney_info.sum1 - addmoney_info.sum
-        y= user1.userprofile.Savings+addmoney_info.sum1 - addmoney_info.sum
-        if x<0:
-            messages.warning(request,'Your expenses exceeded your savings')
+        user = User.objects.get(id=user_id)
+        addmoney_info = Addmoney_info.objects.filter(user=user, Date__gte=one_week_ago, Date__lte=todays_date)
+        
+        expense_sum = sum(i.quantity for i in addmoney_info if i.add_money == 'Expense')
+        income_sum = sum(i.quantity for i in addmoney_info if i.add_money == 'Income')
+
+        x = user.userprofile.Savings + income_sum - expense_sum
+        y = x
+
+        if x < 0:
+            messages.warning(request, 'Your expenses exceeded your savings')
             x = 0
-        if x>0:
+        if x > 0:
             y = 0
-        addmoney_info.x = abs(x)
-        addmoney_info.y = abs(y)
-    return render(request,'home/weekly.html',{'addmoney_info':addmoney_info})
- 
+
+        return render(request, 'home/weekly.html', {
+            'expense_sum': expense_sum,
+            'income_sum': income_sum,
+            'x': abs(x),
+            'y': abs(y)
+        })
+
 def check(request):
     if request.method == 'POST':
-        user_exists = User.objects.filter(email=request.POST['email'])
-        messages.error(request,"Email not registered, TRY AGAIN!!!")
+        if not User.objects.filter(email=request.POST['email']).exists():
+            messages.error(request, "Email not registered, TRY AGAIN!!!")
         return redirect("/reset_password")
- 
+
 def info_year(request):
     todays_date = datetime.date.today()
-    one_week_ago = todays_date-datetime.timedelta(days=30*12)
+    one_year_ago = todays_date - datetime.timedelta(days=365)
     user_id = request.session["user_id"]
-    user1 = User.objects.get(id=user_id)
-    addmoney = Addmoney_info.objects.filter(user = user1,Date__gte=one_week_ago,Date__lte=todays_date)
-    finalrep ={}
- 
-    def get_Category(addmoney_info):
+    user = User.objects.get(id=user_id)
+    addmoney = Addmoney_info.objects.filter(user=user, Date__gte=one_year_ago, Date__lte=todays_date)
+    final_rep = {}
+
+    def get_category(addmoney_info):
         return addmoney_info.Category
-    Category_list = list(set(map(get_Category,addmoney)))
- 
- 
-    def get_expense_category_amount(Category,add_money):
-        quantity = 0 
-        filtered_by_category = addmoney.filter(Category = Category,add_money="Expense") 
+
+    category_list = list(set(map(get_category, addmoney)))
+
+    def get_expense_category_amount(category, add_money):
+        quantity = 0
+        filtered_by_category = addmoney.filter(Category=category, add_money="Expense")
         for item in filtered_by_category:
-            quantity+=item.quantity
+            quantity += item.quantity
         return quantity
- 
-    for x in addmoney:
-        for y in Category_list:
-            finalrep[y]= get_expense_category_amount(y,"Expense")
- 
-    return JsonResponse({'expense_category_data': finalrep}, safe=False)
- 
+
+    for category in category_list:
+        final_rep[category] = get_expense_category_amount(category, "Expense")
+
+    return JsonResponse({'expense_category_data': final_rep}, safe=False)
+
 def info(request):
-    return render(request,'home/info.html')
+    return render(request, 'home/info.html')
 ```
 
 ##### Explicación del código:
