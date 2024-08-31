@@ -46,7 +46,7 @@ Cree los siguientes modelos en models.py archivo en la aplicación de su proyect
 
 Aquí está un fragmento de código Python que define algunos modelos de Django:
 
-```python
+```
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -96,8 +96,8 @@ class UserProfile(models.Model):
     image = models.ImageField(upload_to='profile_image', blank=True)
 
     def __str__(self):
-        return self.user.username```
-
+        return self.user.username
+```
 
 
 ### Explicación del código:
@@ -121,7 +121,7 @@ Ayudará a registrar las tablas en la base de datos.
 
 Registra tus modelos aquí..
 
-```python
+```
 from .models import Addmoney_info
 From django.contrib import admin
 class Addmoney_infoAdmin(admin.ModelAdmin):
@@ -130,7 +130,8 @@ admin.site.register(Addmoney_info,Addmoney_infoAdmin)
 from django.contrib.sessions.models import Session
 admin.site.register(Session)
 from .models import UserProfile
-admin.site.register(UserProfile)```
+admin.site.register(UserProfile)
+```
 
 Explicación del código:
 
@@ -151,7 +152,7 @@ Python manage.py createsuperuser
 
 ## 5. Urls.py
 
-```python
+```
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
@@ -187,7 +188,8 @@ urlpatterns = [
     path('<int:id>/profile_update/',views.profile_update,name="profile_update"),
     path('info/',views.info,name="info"),
     path('info_year/',views.info_year,name="info_year"),
-]```
+]
+```
 
 Explicación del código:
 
@@ -215,7 +217,8 @@ from django.core.paginator import Paginator, EmptyPage , PageNotAnInteger
 from django.db.models import Sum
 from django.http import JsonResponse
 import datetime
-from django.utils import timezone```
+from django.utils import timezone
+```
 
 Explicación del código:
 
@@ -239,7 +242,7 @@ i. datetime: Se utiliza para obtener la fecha y hora actuales.
 
 ### b. Función de inicio de sesión e índice
 
-```python
+```
 def home(request):
     if request.session.has_key('is_logged'):
         return redirect('/index')
@@ -259,7 +262,8 @@ def index(request):
         }
     if request.session.has_key('is_logged'):
         return render(request,'home/index.html',context)
-    return redirect('home')```
+    return redirect('home')
+```
 
   ### Explicación del código:
 
@@ -275,7 +279,7 @@ c. order_by(): Ordena el conjunto de consultas.
 
 ### c. Otras funciones
 
-```python
+```
 def addmoney(request):
     return render(request,'home/addmoney.html')
  
@@ -290,6 +294,7 @@ def profile_edit(request,id):
  
        return render(request,'home/profile_edit.html',{'add':add})
     return redirect("/home")
+```
 
 Explicación del código:
 
@@ -303,7 +308,7 @@ Solo se puede acceder a estas páginas si el usuario ha iniciado sesión.
 
 d. Actualización del perfil
 
-```python
+```
 def profile_update(request,id):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -317,7 +322,8 @@ def profile_update(request,id):
             user.userprofile.save()
             user.save()
             return redirect("/profile")
-    return redirect("/home")   
+    return redirect("/home")
+```   
 
 Explicación del código:
 
@@ -329,7 +335,7 @@ Esta función la realiza save().
 
 e. Backend de registro, inicio de sesión y cierre de sesión:
 
-```python
+```
 def handleSignup(request):
     if request.method =='POST':
             # get the post parameters
@@ -402,6 +408,7 @@ def handleLogout(request):
         logout(request)
         messages.success(request, " Successfully logged out")
         return redirect('home')
+```
 
 
 Explicación del código:
@@ -428,7 +435,7 @@ c. success(): Si se cumple una condición, muestra el mensaje que se especifica 
 
 ### f. Agregar formulario de dinero y agregar backend de actualización de dinero:
 
-```python
+```
 def addmoney_submission(request):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -459,7 +466,8 @@ def addmoney_update(request,id):
             add.Category = request.POST["Category"]
             add .save()
             return redirect("/index")
-    return redirect("/home")  
+    return redirect("/home")
+```  
 
 Explicación del código:
 
@@ -469,7 +477,7 @@ addmoney_update() guarda la información del formulario después de que hayamos 
 
 ### g. Backend de edición de gastos y eliminación de gastos:
 
-```python
+```
 def expense_edit(request,id):
     if request.session.has_key('is_logged'):
         addmoney_info = Addmoney_info.objects.get(id=id)
@@ -483,7 +491,8 @@ def expense_delete(request,id):
         addmoney_info = Addmoney_info.objects.get(id=id)
         addmoney_info.delete()
         return redirect("/index")
-    return redirect("/home") 
+    return redirect("/home")
+``` 
 
 Explicación del código:
 
@@ -495,7 +504,7 @@ expense_delete() ayuda a eliminar los gastos.
 
 ### h. Backend de gastos mensuales, semanales y anuales  
 
-```python
+```
 def expense_month(request):
     todays_date = datetime.date.today()
     one_month_ago = todays_date-datetime.timedelta(days=30)
@@ -639,6 +648,7 @@ def info_year(request):
  
 def info(request):
     return render(request,'home/info.html')
+```
 
 Explicación del código:
 
