@@ -46,7 +46,7 @@ Cree los siguientes modelos en models.py archivo en la aplicación de su proyect
 
 Aquí está un fragmento de código Python que define algunos modelos de Django:
 
-```
+```python
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -121,7 +121,7 @@ Ayudará a registrar las tablas en la base de datos.
 
 Registra tus modelos aquí..
 
-```
+```python
 from .models import Addmoney_info
 From django.contrib import admin
 class Addmoney_infoAdmin(admin.ModelAdmin):
@@ -152,7 +152,7 @@ Python manage.py createsuperuser
 
 ## 5. Urls.py
 
-```
+```python
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
