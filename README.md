@@ -209,9 +209,9 @@ urlpatterns = [
 
 ##### Explicación del código:
 
-#####Estos son los nombres de las urls a las que podemos acceder.
+### Estos son los nombres de las urls a las que podemos acceder.
 
-###### Si intentamos acceder a urls distintas a estas, nos dará un error.
+##### Si intentamos acceder a urls distintas a estas, nos dará un error.
 
 a. path(): Se utiliza para enrutar la url con las vistas de funciones en la carpeta de tu aplicación.
 
@@ -237,21 +237,21 @@ import datetime
 
 ##### Explicación del código:
 
-a. Render: Devuelve el objeto Httpresponse y combina la plantilla con el diccionario que se menciona en ella.
+a. render: Devuelve el objeto Httpresponse y combina la plantilla con el diccionario que se menciona en ella.
 
 b. HttpResponse: Muestra una respuesta de texto al usuario.
 
 c. Redirect: Redirige al usuario a la url especificada.
 
-d. Mensajes: Ayuda a almacenar y mostrar mensajes al usuario en la pantalla.
+d. messages: Ayuda a almacenar y mostrar mensajes al usuario en la pantalla.
 
-e. Autentication: Verifica al usuario.
+e. authenticate: Verifica al usuario.
 
-f. User: Este modelo se encarga de la autenticación y la autorización.
+f. user: Este modelo se encarga de la autenticación y la autorización.
 
-g. Sessión: Ayuda al usuario a acceder únicamente a sus datos. Sin sesiones, los datos de cada usuario se mostrarán al usuario.
+g. session: Ayuda al usuario a acceder únicamente a sus datos. Sin sesiones, los datos de cada usuario se mostrarán al usuario.
 
-h. Paginador: Se utiliza para gestionar datos paginados.
+h. paginator: Se utiliza para gestionar datos paginados.
 
 i. datetime: Se utiliza para obtener la fecha y hora actuales.
 
