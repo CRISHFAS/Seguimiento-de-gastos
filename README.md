@@ -1,33 +1,41 @@
 # Proyecto de seguimiento de gastos
 
-## El registro de entrada y salida de dinero se puede mantener fácilmente con la ayuda del rastreador de gastos. Ayuda a administrar las finanzas. En este proyecto, desarrollaremos un rastreador de gastos que hará un seguimiento de nuestros gastos. Empecemos a desarrollar el proyecto.
+## El registro de entrada y salida de dinero se puede mantener fácilmente con la ayuda del rastreador de gastos. 
+ Empecemos a desarrollar el proyecto...
 
-En este proyecto de python django, crearemos un rastreador de gastos que tomará detalles de nuestros gastos. Al completar el formulario de registro, la persona también deberá completar los detalles sobre los ingresos y la cantidad que desea ahorrar. Algunas personas ganan a diario, por lo que sus ingresos también se pueden agregar de forma regular. Los detalles de los gastos se mostrarán en forma de gráfico circular de forma semanal, mensual y anual. La instalación de django es imprescindible para comenzar con el proyecto Expense Tracker.
+Crearemos un rastreador de gastos que tomará detalles de nuestros gastos. 
+Al completar el formulario de registro, la persona también deberán completar los detalles sobre los ingresos y la cantidad que desea ahorrar. 
+Algunas personas ganan a diario, por lo que sus ingresos también se pueden agregar de forma regular. 
+Los detalles de los gastos se mostrarán en forma de gráfico circular de forma semanal, mensual y anual. La instalación de django es imprescindible para comenzar con el proyecto Expense Tracker.
 
-## Estructura del archivo del proyecto
+## Estructura de archivos
 
-1. Instale el marco djang
+1. Instale el marco django
 2. Crear un proyecto y una aplicación
 3. Models.py
 4. Admin.py
 5. Urls.py
 6. Views.py
 
-## 1. Instala el framework django:
-Para comenzar con el proyecto, debe instalar django en su sistema. Para instalar django, escriba el siguiente comando en cmd o en la ventana del terminal.
+## 1. Instale el framework django:
+Escriba el siguiente comando en cmd o en la ventana del terminal.
 
 Pip install django
 
-## 2. Crea un proyecto y una aplicación:
-Crearemos un nuevo proyecto llamado ExpenseTracker y una aplicación para iniciar el proyecto. Escriba el siguiente comando en la ventana del terminal.
+## 2. Cree un proyecto y una aplicación:
+Cree un nuevo proyecto llamado ExpenseTracker y una aplicación para iniciar el proyecto. 
+Escriba el siguiente comando en la ventana del terminal.
 
 django-admin startproject ExpenseTracker
 python mange.py startapp home
 
-Crea una plantilla y una carpeta estática para almacenar tus archivos. La carpeta de plantillas contendrá todos los archivos html. La carpeta estática contendrá todos los archivos css, imágenes y archivos javascript.
+Cree una plantilla y una carpeta estática para almacenar tus archivos. 
+La carpeta de plantillas contendrá todos los archivos html. 
+La carpeta estática contendrá todos los archivos css, imágenes y archivos javascript.
 
 ## 3. Models.py
-La conectividad de la base de datos se realiza con la ayuda de models.py. Cree los siguientes modelos en models.py archivo en la aplicación de su proyecto.
+La conectividad de la base de datos se realiza con la ayuda de models.py. 
+Cree los siguientes modelos en models.py archivo en la aplicación de su proyecto.
 
 from django.db import models
 from django.utils.timezone import now
@@ -74,6 +82,7 @@ class UserProfile(models.Model):
        return self.user.username
 
 ### Explicación del código:
+
 SELECT_CATEGORY_CHOICES , EXPENSE_CHOICES PROFESSION_CHOICES contienen la lista de opciones que se darán al completar el formulario de gastos.
 
 a. Clave foránea: Establece una relación de muchos a uno.
@@ -104,14 +113,17 @@ from .models import UserProfile
 admin.site.register(UserProfile)
 
 Explicación del código:
-Addmoney_info, UserProfile son los nombres de los modelos que queremos registrar en la base de datos. list_display contiene el nombre de las columnas que se mostrarán en la base de datos.
+
+Addmoney_info, UserProfile son los nombres de los modelos que queremos registrar en la base de datos. 
+list_display contiene el nombre de las columnas que se mostrarán en la base de datos.
 
 Para almacenar estos modelos en la base de datos, ejecute el siguiente comando:
 
 python manage.py makemigrations
      python manage.py migrate
 
-Para acceder a la base de datos, cree el superusuario. Para crear un superusuario, ejecute el siguiente comando en la ventana de su terminal.
+Para acceder a la base de datos, cree el superusuario. 
+Para crear un superusuario, ejecute el siguiente comando en la ventana de su terminal.
 
 Python manage.py createsuperuser
 
@@ -156,7 +168,8 @@ urlpatterns = [
 
 Explicación del código:
 
-Estos son los nombres de las urls a las que podemos acceder. Si intentamos acceder a urls distintas a estas, nos dará un error.
+Estos son los nombres de las urls a las que podemos acceder. 
+Si intentamos acceder a urls distintas a estas, nos dará un error.
 
 a. path(): Se utiliza para enrutar la url con las vistas de funciones en la carpeta de tu aplicación.
 
@@ -179,17 +192,15 @@ from django.http import JsonResponse
 import datetime
 from django.utils import timezone
 
-Code Explanation:
-
 Explicación del código:
 
 a. Render: Devuelve el objeto Httpresponse y combina la plantilla con el diccionario que se menciona en ella.
 b. HttpResponse: Muestra una respuesta de texto al usuario.
-c. Redireccionar: Redirige al usuario a la url especificada.
+c. Redirect: Redirige al usuario a la url especificada.
 d. Mensajes: Ayuda a almacenar y mostrar mensajes al usuario en la pantalla.
-e. Autenticar: Verifica al usuario.
-f. Usuario: Este modelo se encarga de la autenticación y la autorización.
-g. Sesión: Ayuda al usuario a acceder únicamente a sus datos. Sin sesiones, los datos de cada usuario se mostrarán al usuario.
+e. Autentication: Verifica al usuario.
+f. User: Este modelo se encarga de la autenticación y la autorización.
+g. Sessión: Ayuda al usuario a acceder únicamente a sus datos. Sin sesiones, los datos de cada usuario se mostrarán al usuario.
 h. Paginador: Se utiliza para gestionar datos paginados.
 i. datetime: Se utiliza para obtener la fecha y hora actuales.
 
@@ -218,7 +229,8 @@ def index(request):
 
   ### Explicación del código:
 
-home() es una función que permite al usuario acceder al panel una vez que el usuario ha iniciado sesión. index() contiene el backend de la página del panel de control.
+home() es una función que permite al usuario acceder al panel una vez que el usuario ha iniciado sesión. 
+index() contiene el backend de la página del panel de control.
 
 a. filter(): El conjunto de consultas es filtrado por filter().
 
@@ -245,7 +257,10 @@ def profile_edit(request,id):
 
 Explicación del código:
 
-La primera función redirige al usuario a la página donde podemos introducir nuestros gastos e ingresos. profile() redirige al usuario a la página de perfil donde se muestra la información del usuario. profile_edit() redirige a la página donde se puede editar la información del usuario. Solo se puede acceder a estas páginas si el usuario ha iniciado sesión.
+La primera función redirige al usuario a la página donde podemos introducir nuestros gastos e ingresos. 
+profile() redirige al usuario a la página de perfil donde se muestra la información del usuario. 
+profile_edit() redirige a la página donde se puede editar la información del usuario. 
+Solo se puede acceder a estas páginas si el usuario ha iniciado sesión.
 
 d. Actualización del perfil
 
@@ -266,7 +281,9 @@ def profile_update(request,id):
 
 Explicación del código:
 
-profile_update() realiza el backend del formulario de edición de perfil. User.objects.get() obtiene toda la información del usuario y luego toda la información actualizada se guarda de nuevo. Esta función la realiza save().
+profile_update() realiza el backend del formulario de edición de perfil. 
+User.objects.get() obtiene toda la información del usuario y luego toda la información actualizada se guarda de nuevo. 
+Esta función la realiza save().
 
 e. Backend de registro, inicio de sesión y cierre de sesión:
 
@@ -348,7 +365,9 @@ Explicación del código:
 
 handlesignup() maneja el backend del formulario de registro. Uname, fname, lname, email, pass1, pass2, income, savings y profession almacenarán la información del formulario en estas variables.
 
-Hay varias condiciones para inscribirse. El nombre de usuario debe ser único, pass1 y pass 2 deben ser iguales y también la longitud del nombre de usuario debe tener un máximo de 15 caracteres. handlelogin() maneja el backend de la página de inicio de sesión. Si la información introducida por el usuario es correcta, el usuario será redirigido al panel de control. handleLogout() maneja el backend de logout.
+Hay varias condiciones para inscribirse. El nombre de usuario debe ser único, pass1 y pass 2 deben ser iguales y también la longitud del nombre de usuario debe tener un máximo de 15 caracteres. 
+handlelogin() maneja el backend de la página de inicio de sesión. Si la información introducida por el usuario es correcta, el usuario será redirigido al panel de control. 
+handleLogout() maneja el backend de logout.
 
 a. error(): Esta función da el mensaje de error en la pantalla si una condición no se cumple.
 
@@ -392,7 +411,8 @@ def addmoney_update(request,id):
 
 Explicación del código:
 
-addmoney_submission() maneja el backend del formulario que completamos para nuestros gastos diarios. addmoney_update() guarda la información del formulario después de que hayamos editado .
+addmoney_submission() maneja el backend del formulario que completamos para nuestros gastos diarios. 
+addmoney_update() guarda la información del formulario después de que hayamos editado .
 
 ### g. Backend de edición de gastos y eliminación de gastos:
 
@@ -413,7 +433,8 @@ def expense_delete(request,id):
 
 Explicación del código:
 
-expense_edit() redirige al usuario al formulario de edición y también extrae los detalles del usuario de la base de datos y los muestra en la pantalla. expense_delete() ayuda a eliminar los gastos.
+expense_edit() redirige al usuario al formulario de edición y también extrae los detalles del usuario de la base de datos y los muestra en la pantalla. 
+expense_delete() ayuda a eliminar los gastos.
 
 ### h. Backend de gastos mensuales, semanales y anuales  
 
@@ -563,7 +584,12 @@ def info(request):
 
 Explicación del código:
 
-expense_month() obtiene los datos de los gastos del mes actual. La función get_category() obtiene la categoría (gasto/ingreso) de la base de datos. get_expense_category_amount() obtiene el importe de la base de datos de la categoría (gasto). La función stats() calcula los gastos generales y los ahorros realizados por el usuario en un mes. expense_week() y info_year() realizan la misma función que expense_month() pero semanalmente. weekly() obtiene la cantidad ahorrada en un mes y también los gastos generales de un usuario.
+expense_month() obtiene los datos de los gastos del mes actual. 
+La función get_category() obtiene la categoría (gasto/ingreso) de la base de datos. 
+get_expense_category_amount() obtiene el importe de la base de datos de la categoría (gasto). 
+La función stats() calcula los gastos generales y los ahorros realizados por el usuario en un mes. 
+expense_week() y info_year() realizan la misma función que expense_month() pero semanalmente. 
+weekly() obtiene la cantidad ahorrada en un mes y también los gastos generales de un usuario.
 
 # Salida del rastreador de gastos de Python:
 
